@@ -1,10 +1,26 @@
-# HDUES E-Learning Project
+# Dự án E-Learning HDUES
 
-This is the official repository for the HDUES E-Learning platform, a modern web application built with Spring Boot and Thymeleaf.
+Đây là repository chính thức cho nền tảng E-Learning của HDUES, một ứng dụng web hiện đại được xây dựng bằng Spring Boot và Thymeleaf.
 
-## Iteration 1 - Project Structure
+---
 
-Below is the standard directory structure for the project as of Iteration 1. This structure is designed to be scalable and maintainable.
+## Iteration 1 - Tiến độ & Cấu trúc
+
+Tài liệu này mô tả cấu trúc và những thành tựu của dự án sau khi kết thúc Iteration 1, đóng vai trò là kim chỉ nam cho tất cả thành viên trong nhóm.
+
+### 1. Changelog & Các tính năng đã hoàn thành
+
+Công việc nền tảng cho dự án đã hoàn tất, giải quyết tất cả các mục tiêu kiến trúc chính cho iteration đầu tiên.
+
+-   [x] **Giải quyết mâu thuẫn Entity:** Đã chuẩn hóa sử dụng entity `Syllabus` và tạo mới entity `Setting` để quản lý các cấu hình động.
+-   [x] **Xây dựng tầng Backend API:** Đã xây dựng một kiến trúc 3 tầng hoàn chỉnh (Controller, Service, Repository) cho các entity lõi (`User`, `Subject`, `Syllabus`, `Setting`).
+-   [x] **Data Transfer Objects (DTOs):** Đã triển khai các DTO với các quy tắc validation chặt chẽ (`@NotNull`, `@Size`, v.v.) để đảm bảo tính toàn vẹn dữ liệu của API.
+-   [x] **Tài liệu hóa API:** Đã tích hợp Swagger/OpenAPI để cung cấp tài liệu API tương tác, tự động cho tất cả các endpoint của backend.
+-   [x] **Kiến trúc Frontend:** Đã thiết lập một bộ máy template Thymeleaf module hóa, có thể tái sử dụng, với một layout chính và các fragments chia sẻ.
+
+### 2. Cây thư mục (Directory Tree)
+
+Cấu trúc dự án hiện tại như sau:
 
 ```
 HDUES/
@@ -15,40 +31,70 @@ HDUES/
     │   │       └── example/
     │   │           └── project/
     │   │               ├── ProjectApplication.java
-    │   │               ├── controller/      # (Controllers) Xử lý các HTTP requests từ client.
+    │   │               ├── controller/      # (Controller) Xử lý các HTTP request
     │   │               │   ├── AdminController.java
     │   │               │   └── ClassroomController.java
-    │   │               ├── dto/             # (Data Transfer Objects) Đối tượng truyền dữ liệu giữa các tầng.
+    │   │               ├── dto/             # (DTO) Các đối tượng truyền dữ liệu cho API
     │   │               │   ├── SettingDTO.java
     │   │               │   ├── SubjectDTO.java
     │   │               │   ├── SyllabusDTO.java
     │   │               │   └── UserDTO.java
-    │   │               ├── entity/          # (Entities) Ánh xạ tới các bảng trong cơ sở dữ liệu.
+    │   │               ├── entity/          # (Entity) Ánh xạ tới các bảng trong database
     │   │               │   └── Setting.java
-    │   │               ├── service/         # (Services) Chứa business logic của ứng dụng.
+    │   │               ├── service/         # (Service) Chứa logic nghiệp vụ chính
     │   │               │   ├── ...
-    │   │               └── repository/      # (Repositories) Tương tác với cơ sở dữ liệu.
+    │   │               └── repository/      # (Repository) Tầng truy cập dữ liệu
     │   │                   ├── ...
     │   │
     │   └── resources/
-    │       └── ...
+    │       ├── static/              # Chứa các file tĩnh (CSS, JS, Images)
+    │       └── templates/           # Chứa các view template của Thymeleaf
+    │           ├── fragments/       # (Fragment) Các thành phần UI tái sử dụng (header, footer)
+    │           │   ├── ...
+    │           ├── layouts/         # (Layout) Khung layout chính của trang
+    │           │   └── layout.html
+    │           └── pages/           # (Page) Các trang con cụ thể của ứng dụng
+    │               └── classroom/
+    │                   └── dashboard.html
+    │
+    └── test/
 ```
 
-### Roles of Directories
+### 3. Quyết định Kiến trúc
 
--   `controller`: Handles incoming HTTP requests and maps them to the appropriate service methods.
--   `dto`: Data Transfer Objects used to shape incoming and outgoing data for APIs.
--   `entity`: JPA entities that map to database tables.
--   `service`: Contains the core business logic of the application.
--   `repository`: Manages data access and persistence with the database.
--   `templates`: The root for all Thymeleaf view templates.
+#### Tại sao lại có Entity `Setting.java`?
 
-### Architectural Decisions
+Entity `Setting` được đưa vào để quản lý các cấu hình và tùy chọn động của ứng dụng mà không cần phải "hardcode" (ghi cứng vào code). Điều này mang lại nhiều lợi thế quan trọng:
 
-#### Why `Setting.java` Entity?
+1.  **Linh hoạt (Flexibility):** Quản trị viên (Admin) có thể thêm, xóa, hoặc sửa các tùy chọn (ví dụ: vai trò người dùng, loại học kỳ, trạng thái...) trực tiếp thông qua giao diện quản trị mà không cần phải deploy lại ứng dụng.
+2.  **Dễ bảo trì (Maintainability):** Tập trung tất cả các tham số hệ thống vào một nơi duy nhất trong database, giúp chúng dễ dàng được quản lý và kiểm tra.
+3.  **Khả năng mở rộng (Scalability):** Khi ứng dụng phát triển, các loại cấu hình mới có thể được thêm vào một cách dễ dàng bằng cách chèn các bản ghi mới với một `type` mới, đảm bảo hệ thống có thể thích ứng với các yêu cầu trong tương lai.
 
-The `Setting` entity was introduced to manage dynamic configurations and options within the application without hardcoding them. This provides several key advantages:
+### 4. Hướng dẫn Chạy & Kiểm chứng
 
-1.  **Flexibility:** System administrators can add, remove, or modify options (like user roles, semester types, or notification preferences) directly through an admin interface without needing to redeploy the application.
-2.  **Maintainability:** It centralizes all system-wide parameters in one place in the database, making them easy to manage and audit.
-3.  **Scalability:** As the application grows, new types of settings can be easily added by simply inserting new records with a new `type`, ensuring the system can adapt to future requirements.
+Hướng dẫn này giải thích cách chạy ứng dụng và xác minh các công việc đã hoàn thành.
+
+#### a. Kiểm chứng Backend API
+
+Các API backend đã được tài liệu hóa và có thể kiểm thử thông qua Swagger UI.
+
+1.  **Chạy ứng dụng** từ IDE của bạn hoặc bằng lệnh `mvn spring-boot:run`.
+2.  **Truy cập Swagger UI:** Mở trình duyệt và điều hướng đến:
+    -   `http://localhost:8080/swagger-ui.html`
+3.  **Khám phá:** Bây giờ bạn có thể khám phá controller `Admin Management` và thực thi các `GET` endpoint trực tiếp từ trình duyệt để xem dữ liệu live từ ứng dụng.
+
+#### b. Kiểm chứng Frontend Layout
+
+Bộ máy template Thymeleaf có thể được xác minh bằng cách truy cập trang demo.
+
+1.  **Chạy ứng dụng.**
+2.  **Truy cập trang Demo:** Mở trình duyệt và điều hướng đến:
+    -   `http://localhost:8080/classroom/dashboard`
+3.  **Xác minh:** Trang web sẽ render chính xác với header và footer chung, xác nhận rằng hệ thống layout và fragment đang hoạt động như mong đợi.
+
+### 5. Code Review & Các bước tiếp theo
+
+-   **Những điểm đã làm tốt:** Dự án hiện có một kiến trúc backend và frontend mạnh mẽ, tách biệt (decoupled), giúp đẩy nhanh tốc độ phát triển trong tương lai.
+-   **Đề xuất cho Iteration 2:**
+    1.  **Global Exception Handling:** Triển khai một `@ControllerAdvice` để chuẩn hóa các response lỗi của API.
+    2.  **Tự động hóa DTO Mapping:** Cân nhắc tích hợp một thư viện như **MapStruct** để giảm code lặp lại khi chuyển đổi giữa Entity và DTO.
