@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Style Reference — AI Readable</title>
+  <style>
+    :root {
+      /* Điền hoặc cập nhật theo ảnh reference */
+      --color-primary: #2563eb;
+      --color-secondary: #64748b;
+      --color-background: #ffffff;
+      --color-surface: #f8fafc;
+      --color-text: #0f172a;
+      --color-text-muted: #64748b;
+      --font-primary: system-ui, -apple-system, sans-serif;
+      --font-heading: var(--font-primary);
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --space-unit: 8px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: var(--font-primary);
+      color: var(--color-text);
+      background: var(--color-background);
+      line-height: 1.6;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    h1 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+    h2 { font-size: 1.25rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--color-primary); }
+    .meta { color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: 2rem; }
+    .reference-image {
+      margin: 2rem 0;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--color-surface);
+    }
+    .reference-image img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+    .reference-image figcaption {
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+    section { margin-bottom: 2rem; }
+    dl { margin: 0; }
+    dt { font-weight: 600; margin-top: 0.75rem; color: var(--color-text); }
+    dd { margin-left: 0; margin-top: 0.25rem; color: var(--color-text-muted); }
+    .token-list { font-family: ui-monospace, monospace; font-size: 0.875rem; }
+    code { background: var(--color-surface); padding: 0.15em 0.4em; border-radius: var(--radius-sm); }
+    ul { padding-left: 1.25rem; }
+    .note {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: 1rem;
+      margin: 1.5rem 0;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Design Style Reference</h1>
+    <p class="meta">Tài liệu này mô tả style của design để AI khác có thể bám theo. Nguồn: ảnh reference bên dưới.</p>
+  </header>
+
+  <!-- Ảnh gốc — AI có thể được cung cấp file ảnh riêng để xem -->
+  <section id="reference-image" aria-label="Reference image">
+    <h2>1. Reference image (design cần bám theo)</h2>
+    <figure class="reference-image">
+      <img
+        src="original-4f8286cc00313f39e7f7c39160dc23dc.webp"
+        alt="Design reference — layout, colors, typography, components to follow"
+        width=""
+        height=""
+      />
+      <figcaption>File: original-4f8286cc00313f39e7f7c39160dc23dc.webp — dùng ảnh này làm chuẩn cho style.</figcaption>
+    </figure>
+    <p><strong>Đường dẫn ảnh:</strong> <code>docs/original-4f8286cc00313f39e7f7c39160dc23dc.webp</code></p>
+  </section>
+
+  <!-- Mục đích cho AI -->
+  <section id="instructions-for-ai">
+    <h2>2. Hướng dẫn cho AI</h2>
+    <p>Khi nhận file HTML này cùng ảnh reference:</p>
+    <ul>
+      <li>Xem ảnh ở mục 1 để nắm layout, màu sắc, font chữ, khoảng cách, thành phần giao diện.</li>
+      <li>Áp dụng hoặc cập nhật các design tokens ở mục 3–6 cho đúng với ảnh.</li>
+      <li>Khi tạo UI mới, dùng đúng palette, typography, spacing và component style đã mô tả.</li>
+    </ul>
+  </section>
+
+  <!-- Design tokens — có thể cập nhật sau khi xem ảnh -->
+  <section id="color-palette">
+    <h2>3. Color palette</h2>
+    <p>Mô tả màu chính trong design (cập nhật theo ảnh reference):</p>
+    <dl class="token-list">
+      <dt>--color-primary</dt>
+      <dd>Màu nhấn (CTA, link, accent): <code>#2563eb</code></dd>
+      <dt>--color-secondary</dt>
+      <dd>Màu phụ: <code>#64748b</code></dd>
+      <dt>--color-background</dt>
+      <dd>Nền trang: <code>#ffffff</code></dd>
+      <dt>--color-surface</dt>
+      <dd>Nền card/panel: <code>#f8fafc</code></dd>
+      <dt>--color-text</dt>
+      <dd>Chữ chính: <code>#0f172a</code></dd>
+      <dt>--color-text-muted</dt>
+      <dd>Chữ phụ: <code>#64748b</code></dd>
+    </dl>
+    <div class="note">Cập nhật các giá trị trên cho khớp với ảnh reference. Thêm màu khác (border, success, error…) nếu có trong design.</div>
+  </section>
+
+  <section id="typography">
+    <h2>4. Typography</h2>
+    <dl class="token-list">
+      <dt>--font-primary / --font-heading</dt>
+      <dd>Font chữ chính và tiêu đề (từ ảnh): <code>system-ui, -apple-system, sans-serif</code></dd>
+      <dt>Kích thước / line-height</dt>
+      <dd>Heading: lớn rõ ràng; body: ~1rem–1.125rem, line-height ~1.5–1.6. Cập nhật cụ thể theo ảnh.</dd>
+    </dl>
+  </section>
+
+  <section id="spacing-and-radius">
+    <h2>5. Spacing & border radius</h2>
+    <dl class="token-list">
+      <dt>--space-unit</dt>
+      <dd>Đơn vị spacing cơ sở: <code>8px</code>. Padding/margin thường là bội số (8, 16, 24, 32…).</dd>
+      <dt>--radius-sm / --radius-md / --radius-lg</dt>
+      <dd>Bo góc: 4px, 8px, 12px. Cập nhật theo ảnh.</dd>
+    </dl>
+  </section>
+
+  <section id="components-and-layout">
+    <h2>6. Components & layout</h2>
+    <p>Mô tả ngắn (cập nhật sau khi xem ảnh):</p>
+    <ul>
+      <li><strong>Navigation/header:</strong> …</li>
+      <li><strong>Buttons:</strong> …</li>
+      <li><strong>Cards/panels:</strong> …</li>
+      <li><strong>Form controls:</strong> …</li>
+      <li><strong>Grid/columns:</strong> …</li>
+    </ul>
+  </section>
+
+  <footer class="meta" style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+    Design reference — cập nhật các mục 3–6 cho khớp với ảnh <code>original-4f8286cc00313f39e7f7c39160dc23dc.webp</code>.
+  </footer>
+</body>
+</html>
