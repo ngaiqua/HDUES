@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <aside th:fragment="sidebar(navItems)" id="sidebar" class="w-16 flex flex-col py-6 border-r border-gray-100 z-20 bg-white shrink-0 transition-all duration-300 ease-in-out overflow-x-hidden">
+        <div class="w-full flex items-center px-5 mb-8 mt-2 shrink-0">
+            <button id="sidebarToggle" class="text-gray-500 hover:text-gray-800 transition-colors focus:outline-none">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <span class="sidebar-text max-w-0 opacity-0 ml-0 overflow-hidden whitespace-nowrap font-extrabold text-lg text-textDark transition-all duration-300 tracking-wide">Menu</span>
+        </div>
+
+        <nav class="flex flex-col space-y-2 flex-1 w-full">
+            <a th:each="item : ${navItems}" th:href="@{${item.url}}"
+               class="relative group flex items-center px-5 py-3 transition-colors"
+               th:classappend="${item.active} ? 'text-primary' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'">
+
+                <span th:if="${item.active}" class="absolute left-0 w-1 h-6 bg-primary rounded-r-full"></span>
+                <div class="w-6 flex justify-center shrink-0"><i class="fa-solid" th:classappend="${item.icon} + ' text-xl'"></i></div>
+                <span class="sidebar-text max-w-0 opacity-0 ml-0 overflow-hidden whitespace-nowrap font-semibold text-sm transition-all duration-300" th:text="${item.label}">Menu Item</span>
+            </a>
+        </nav>
+    </aside>
+</body>
+</html>

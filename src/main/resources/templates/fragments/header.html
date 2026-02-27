@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <header th:fragment="header(pageTitle, user)" class="h-16 flex items-center justify-between px-8 border-b border-gray-100 shrink-0">
+        <div class="flex items-center">
+            <h1 class="font-bold text-textDark text-lg tracking-wide" th:text="${pageTitle}">LMS - Teacher's Workspace</h1>
+        </div>
+        <div class="flex items-center space-x-6">
+            <div class="relative hidden md:block">
+                <input type="text" placeholder="Search..." class="bg-gray-100 text-sm rounded-full pl-4 pr-10 py-1.5 w-72 focus:outline-none focus:ring-2 focus:ring-gray-200 placeholder-gray-400">
+                <i class="fa-solid fa-magnifying-glass absolute right-3 top-2 text-gray-400 text-sm"></i>
+            </div>
+            <button class="relative text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-bell"></i>
+                <span class="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full border border-white"></span>
+            </button>
+
+            <div class="relative">
+                <button class="flex items-center space-x-2" id="user-menu-button">
+                    <img th:src="${user != null ? user.avatarUrl : 'https://i.pravatar.cc/150?img=11'}" alt="User" class="w-8 h-8 rounded-full border border-gray-200">
+                    <span class="hidden sm:block text-sm font-semibold text-textDark" th:text="${user != null ? user.name : 'Guest'}">John Doe</span>
+                    <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
+                </button>
+                <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden">
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                    <div class="border-t border-gray-100"></div>
+                    <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Sign out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+</body>
+</html>
