@@ -1,34 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-    <header th:fragment="header(pageTitle, user)" class="h-16 flex items-center justify-between px-8 border-b border-gray-100 shrink-0">
-        <div class="flex items-center">
-            <h1 class="font-bold text-textDark text-lg tracking-wide" th:text="${pageTitle}">LMS - Teacher's Workspace</h1>
-        </div>
-        <div class="flex items-center space-x-6">
-            <div class="relative hidden md:block">
-                <input type="text" placeholder="Search..." class="bg-gray-100 text-sm rounded-full pl-4 pr-10 py-1.5 w-72 focus:outline-none focus:ring-2 focus:ring-gray-200 placeholder-gray-400">
-                <i class="fa-solid fa-magnifying-glass absolute right-3 top-2 text-gray-400 text-sm"></i>
-            </div>
-            <button class="relative text-gray-400 hover:text-gray-600">
-                <i class="fa-solid fa-bell"></i>
-                <span class="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full border border-white"></span>
-            </button>
+<header th:fragment="header(pageTitle, user)" class="h-20 flex items-center justify-between px-8 bg-[#FAF4F0] shrink-0">
+    <div class="flex items-center">
+        <h1 class="font-bold text-[#2B253C] text-xl tracking-wide flex items-center gap-3">
+            <span th:text="${pageTitle}">LMS - Teacher's Workspace</span>
+        </h1>
+    </div>
 
-            <div class="relative">
-                <button class="flex items-center space-x-2" id="user-menu-button">
-                    <img th:src="${user != null ? user.avatarUrl : 'https://i.pravatar.cc/150?img=11'}" alt="User" class="w-8 h-8 rounded-full border border-gray-200">
-                    <span class="hidden sm:block text-sm font-semibold text-textDark" th:text="${user != null ? user.name : 'Guest'}">John Doe</span>
-                    <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
-                </button>
-                <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                    <div class="border-t border-gray-100"></div>
-                    <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Sign out</a>
-                </div>
-            </div>
+    <div class="flex items-center space-x-8">
+        <div class="relative hidden md:block">
+            <input type="text" placeholder="Search" class="bg-white text-[#2B253C] text-sm rounded-full pl-11 pr-4 py-2 w-64 border-[1.5px] border-[#2B253C] shadow-[2px_2px_0px_#2B253C] focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_#2B253C] transition-shadow placeholder-gray-400">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-2.5 text-gray-400 text-sm"></i>
         </div>
-    </header>
+
+        <button class="relative text-[#2B253C] hover:opacity-70 transition-opacity">
+            <i class="fa-regular fa-bell text-xl"></i>
+            <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#E04F3E] rounded-full border-[1.5px] border-[#FAF4F0]"></span>
+        </button>
+
+        <div class="relative">
+            <a th:href="@{/profile}" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+                <span class="hidden sm:block text-sm font-bold text-[#2B253C]" th:text="${user != null ? user.name : 'Sofiia'}">Sofiia</span>
+                <img th:src="${user != null ? user.avatarUrl : 'https://i.pravatar.cc/150?img=5'}" alt="User" class="w-9 h-9 rounded-full border-[1.5px] border-[#2B253C] object-cover">
+            </a>
+        </div>
+    </div>
+</header>
 </body>
 </html>
