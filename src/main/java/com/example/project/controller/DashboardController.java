@@ -1,5 +1,7 @@
 package com.example.project.controller;
 
+import com.example.project.service.CustomOAuth2User;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +14,6 @@ import java.util.List;
 @RequestMapping("/dashboard")
 public class DashboardController {
 
-    // A simple NavItem class to hold sidebar menu data
     public static class NavItem {
         private final String url;
         private final String icon;
@@ -32,12 +33,11 @@ public class DashboardController {
         public boolean isActive() { return active; }
     }
 
-    // A simple User class for demo purposes
-    public static class User {
+    public static class DashboardUser {
         private final String name;
         private final String avatarUrl;
 
-        public User(String name, String avatarUrl) {
+        public DashboardUser(String name, String avatarUrl) {
             this.name = name;
             this.avatarUrl = avatarUrl;
         }
@@ -47,57 +47,62 @@ public class DashboardController {
     }
 
     @GetMapping("/{role}")
-    public String getDashboardByRole(@PathVariable("role") String role, Model model) {
+    public String getDashboardByRole(@PathVariable("role") String role,
+                                    @AuthenticationPrincipal CustomOAuth2User authUser,
+                                    Model model) {
+        // Khi bật lại bảo mật: bỏ comment 3 dòng dưới để chặn truy cập chưa đăng nhập
+        // if (authUser == null) {
+        //     return "redirect:/login";
+        // }
         String normalizedRole = role.toLowerCase();
         List<NavItem> navItems;
+        String pageTitle;
+        String avatarUrl = authUser != null && authUser.getPictureUrl() != null ? authUser.getPictureUrl() : "https://i.pravatar.cc/150?img=1";
+        String fullName = authUser != null && authUser.getFullName() != null ? authUser.getFullName() : (authUser != null ? authUser.getEmail() : "Guest");
 
         switch (normalizedRole) {
             case "teacher":
             case "lecturer":
-                model.addAttribute("pageTitle", "Teacher's Workspace");
-                model.addAttribute("user", new User("Dr. Emily Carter", "https://i.pravatar.cc/150?img=11"));
+                pageTitle = "Giảng viên";
                 navItems = List.of(
-                    new NavItem("/dashboard/teacher", "fa-house", "Home", true),
-                    new NavItem("/courses", "fa-book", "My Courses", false),
-                    new NavItem("/analytics", "fa-display", "Dashboard", false)
+                    new NavItem("/dashboard/lecturer", "fa-house", "Trang chủ", true),
+                    new NavItem("/courses", "fa-book", "Khóa học", false),
+                    new NavItem("/analytics", "fa-display", "Thống kê", false)
                 );
                 break;
             case "student":
-                model.addAttribute("pageTitle", "Student's Dashboard");
-                model.addAttribute("user", new User("Alex Johnson", "https://i.pravatar.cc/150?img=32"));
+                pageTitle = "Sinh viên";
                 navItems = List.of(
-                    new NavItem("/dashboard/student", "fa-house", "Home", true),
-                    new NavItem("/my-courses", "fa-book-open-reader", "My Courses", false),
-                    new NavItem("/my-grades", "fa-graduation-cap", "My Grades", false)
+                    new NavItem("/dashboard/student", "fa-house", "Trang chủ", true),
+                    new NavItem("/my-courses", "fa-book-open-reader", "Khóa học của tôi", false),
+                    new NavItem("/my-grades", "fa-graduation-cap", "Điểm", false)
                 );
                 break;
             case "admin":
-                model.addAttribute("pageTitle", "System Administration");
-                model.addAttribute("user", new User("Admin User", "https://i.pravatar.cc/150?img=1"));
+                pageTitle = "Quản trị hệ thống";
                 navItems = List.of(
-                    new NavItem("/dashboard/admin", "fa-shield-halved", "Overview", true),
-                    new NavItem("/admin/users", "fa-users", "User Management", false)
+                    new NavItem("/dashboard/admin", "fa-shield-halved", "Tổng quan", true),
+                    new NavItem("/admin/allowed-emails", "fa-envelope-circle-check", "Duyệt email đăng nhập", false),
+                    new NavItem("/admin/users", "fa-users", "Quản lý người dùng", false)
                 );
                 break;
             case "training":
-            case "training-dept":
-                model.addAttribute("pageTitle", "Training Department");
-                model.addAttribute("user", new User("Training Officer", "https://i.pravatar.cc/150?img=5"));
+                pageTitle = "Phòng đào tạo";
                 navItems = List.of(
-                    new NavItem("/dashboard/training", "fa-building-columns", "Dashboard", true),
-                    new NavItem("/training/classes", "fa-chalkboard-user", "Class Management", false)
+                    new NavItem("/dashboard/training", "fa-building-columns", "Tổng quan", true),
+                    new NavItem("/training/allowed-emails", "fa-envelope-circle-check", "Duyệt email đăng nhập", false),
+                    new NavItem("/training/classes", "fa-chalkboard-user", "Quản lý lớp", false)
                 );
                 break;
             default:
-                model.addAttribute("pageTitle", "Dashboard");
-                model.addAttribute("user", new User("Guest", ""));
+                pageTitle = "Dashboard";
                 navItems = List.of();
                 break;
         }
 
+        model.addAttribute("pageTitle", pageTitle);
+        model.addAttribute("user", new DashboardUser(fullName, avatarUrl));
         model.addAttribute("navItems", navItems);
-        
-        // All roles will use the same dashboard view
         return "dashboard";
     }
 }

@@ -13,7 +13,9 @@ public class User {
 
     private String email;
     private String fullname;
+    @Column(nullable = true) // null for OAuth-only users
     private String password;
+    private String pictureUrl; // Google profile picture
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -48,4 +50,7 @@ public class User {
 
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
+
+    public String getPictureUrl() { return pictureUrl; }
+    public void setPictureUrl(String pictureUrl) { this.pictureUrl = pictureUrl; }
 }

@@ -12,6 +12,13 @@ Tài liệu này mô tả cấu trúc và những thành tựu của dự án sa
 
 Công việc nền tảng cho dự án đã hoàn tất, giải quyết tất cả các mục tiêu kiến trúc chính cho iteration đầu tiên.
 
+#### Đăng nhập Google (OAuth2) & Phân quyền
+-   [x] **Login with Google:** Đăng nhập bằng tài khoản Google (Spring Security OAuth2).
+-   [x] **4 vai trò:** Student, Lecturer, Training Department, Admin — mỗi vai trò có dashboard riêng.
+-   [x] **Trang đăng nhập:** Layout 2 cột (trái: logo Trường Đại học Hải Dương, phải: nền xanh + nút "Login with Google").
+-   [x] **Admin mặc định:** Email `dohoanganh28072004@gmail.com` luôn có vai trò Admin và được phép đăng nhập.
+-   [x] **Duyệt email (Admin & Phòng đào tạo):** Chỉ email nằm trong danh sách "allowed" mới đăng nhập được (trừ admin). Có trang quản lý danh sách email được duyệt và **Import Excel** để duyệt nhiều tài khoản một lúc (cột 1: email, cột 2: role: STUDENT, LECTURER, TRAINING_DEPARTMENT, ADMIN).
+
 -   [x] **Giải quyết mâu thuẫn Entity:** Đã chuẩn hóa sử dụng entity `Syllabus` và tạo mới entity `Setting` để quản lý các cấu hình động.
 -   [x] **Xây dựng tầng Backend API:** Đã xây dựng một kiến trúc 3 tầng hoàn chỉnh (Controller, Service, Repository) cho các entity lõi (`User`, `Subject`, `Syllabus`, `Setting`).
 -   [x] **Data Transfer Objects (DTOs):** Đã triển khai các DTO với các quy tắc validation chặt chẽ (`@NotNull`, `@Size`, v.v.) để đảm bảo tính toàn vẹn dữ liệu của API.
@@ -91,6 +98,12 @@ Bộ máy template Thymeleaf có thể được xác minh bằng cách truy cậ
 2.  **Truy cập trang Demo:** Mở trình duyệt và điều hướng đến:
     -   `http://localhost:8080/classroom/dashboard`
 3.  **Xác minh:** Trang web sẽ render chính xác với header và footer chung, xác nhận rằng hệ thống layout và fragment đang hoạt động như mong đợi.
+
+#### c. Đăng nhập Google & Logo
+
+1.  **Cơ sở dữ liệu:** Tạo database PostgreSQL (mặc định `postgres` hoặc sửa `spring.datasource.url` trong `application.properties`).
+2.  **Logo trang đăng nhập:** Đặt logo Trường Đại học Hải Dương vào `src/main/resources/static/images/uhd-logo.png`. Nếu không có file, trang sẽ hiển thị chữ "TRƯỜNG ĐẠI HỌC HẢI DƯƠNG" và "UHD".
+3.  **Đăng nhập:** Vào `http://localhost:8080/login` → "Login with Google". Email `dohoanganh28072004@gmail.com` đăng nhập với vai trò Admin. Các email khác cần được Admin/Phòng đào tạo thêm vào danh sách "Duyệt email đăng nhập" (hoặc import Excel) trước khi đăng nhập.
 
 ### 5. Code Review & Các bước tiếp theo
 
