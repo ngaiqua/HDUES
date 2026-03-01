@@ -68,7 +68,7 @@ public class DashboardController {
                 navItems = List.of(
                     new NavItem("/dashboard/student", "fa-house", "Home", true),
                     new NavItem("/my-courses", "fa-book-open-reader", "My Courses", false),
-                    new NavItem("/my-grades", "fa-graduation-cap", "My Grades", false)
+                    new NavItem("/syllabus", "fa-clipboard-list", "Syllabus", false)
                 );
                 break;
             case "admin":
@@ -96,8 +96,7 @@ public class DashboardController {
         }
 
         model.addAttribute("navItems", navItems);
-        
-        // All roles will use the same dashboard view
+
         return "dashboard";
     }
 }
