@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: layout(~{::main}, ${pageTitle}, ${user}, ${navItems})}">
+<head>
+    <title>Duyệt email đăng nhập</title>
+</head>
+<body>
+<main class="flex-1 overflow-auto bg-white p-4 md:p-6">
+    <div class="max-w-4xl mx-auto">
+        <p th:if="${message}" class="mb-4 p-3 bg-green-100 text-green-800 rounded" th:text="${message}"></p>
+        <p th:if="${error}" class="mb-4 p-3 bg-red-100 text-red-800 rounded" th:text="${error}"></p>
+        <ul th:if="${importErrors}" class="mb-4 list-disc list-inside text-amber-800 bg-amber-50 p-3 rounded">
+            <li th:each="err : ${importErrors}" th:text="${err}"></li>
+        </ul>
+
+        <div class="flex flex-wrap gap-4 mb-6">
+            <form th:action="@{${listPath + '/add'}}" method="post" class="flex flex-wrap items-end gap-2">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="text" name="email" placeholder="Email" required
+                       class="border border-[#2B253C] rounded-lg px-3 py-2 w-56"/>
+                <select name="role" class="border border-[#2B253C] rounded-lg px-3 py-2">
+                    <option value="STUDENT">Sinh viên</option>
+                    <option value="LECTURER">Giảng viên</option>
+                    <option value="TRAINING_DEPARTMENT">Phòng đào tạo</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+                <button type="submit" class="bg-[#2563eb] text-white px-4 py-2 rounded-lg hover:opacity-90">Thêm email</button>
+            </form>
+            <form th:action="@{${listPath + '/import'}}" method="post" enctype="multipart/form-data" class="flex items-end gap-2">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="file" name="file" accept=".xlsx,.xls" required class="text-sm"/>
+                <button type="submit" class="bg-[#10B981] text-white px-4 py-2 rounded-lg hover:opacity-90">Import Excel</button>
+            </form>
+        </div>
+
+        <p class="text-sm text-gray-600 mb-2">File Excel: cột 1 = email, cột 2 = role (STUDENT, LECTURER, TRAINING_DEPARTMENT, ADMIN). Dòng đầu là header.</p>
+
+        <div class="border border-[#2B253C] rounded-2xl shadow-[4px_4px_0px_#2B253C] overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-[#FAF4F0] border-b-2 border-[#2B253C]">
+                <tr>
+                    <th class="px-4 py-3 font-bold text-[#2B253C]">Email</th>
+                    <th class="px-4 py-3 font-bold text-[#2B253C]">Vai trò</th>
+                    <th class="px-4 py-3 font-bold text-[#2B253C]">Ngày duyệt</th>
+                    <th class="px-4 py-3 font-bold text-[#2B253C]">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="a : ${allowedEmails}" class="border-b border-gray-200 hover:bg-gray-50">
+                    <td class="px-4 py-3" th:text="${a.email}"></td>
+                    <td class="px-4 py-3" th:text="${a.role.name()}"></td>
+                    <td class="px-4 py-3" th:text="${a.approvedAt != null ? #temporals.format(a.approvedAt, 'dd/MM/yyyy HH:mm') : '-'}"></td>
+                    <td class="px-4 py-3">
+                        <form th:action="@{${listPath + '/delete/' + a.id}}" method="post" class="inline">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            <button type="submit" class="text-red-600 hover:underline text-sm" onclick="return confirm('Xóa email này khỏi danh sách?');">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+</body>
+</html>
