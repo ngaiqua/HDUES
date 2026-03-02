@@ -1,7 +1,8 @@
 package com.example.project.entity;
-import java.util.List;
 
 import jakarta.persistence.*;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 public class FlashCardQuestion {
@@ -16,8 +17,9 @@ public class FlashCardQuestion {
     @JoinColumn(name = "flashcard_id")
     private FlashCard flashCard;
 
-    @OneToMany(mappedBy = "flashCardQuestion", cascade = CascadeType.ALL)
-    private List<FlashCardAnswer> answers;
+    // TỐI ƯU: CascadeType.ALL giúp tự động lưu Answers khi lưu Question
+    @OneToMany(mappedBy = "flashCardQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FlashCardAnswer> answers = new ArrayList<>();
 
     // Getter & Setter
     public Long getId() { return id; }
@@ -32,4 +34,3 @@ public class FlashCardQuestion {
     public List<FlashCardAnswer> getAnswers() { return answers; }
     public void setAnswers(List<FlashCardAnswer> answers) { this.answers = answers; }
 }
-

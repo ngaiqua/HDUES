@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tạo Bộ Thẻ Mới</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow">
+        <h1 class="text-2xl font-bold mb-6 text-blue-600">🆕 Tạo Bộ Flashcard Mới</h1>
+        
+        <form id="flashcardForm">
+            <div class="mb-6">
+                <label class="block font-semibold">Tên bộ thẻ:</label>
+                <input type="text" id="title" class="w-full border p-2 rounded" placeholder="Ví dụ: Java Core">
+                <label class="block font-semibold mt-3">Mô tả:</label>
+                <textarea id="description" class="w-full border p-2 rounded"></textarea>
+            </div>
+
+            <hr class="my-6">
+
+            <div id="questionsContainer">
+                <h2 class="text-xl font-semibold mb-4">Câu hỏi & Đáp án</h2>
+                </div>
+
+            <button type="button" onclick="addQuestion()" class="bg-green-500 text-white px-4 py-2 rounded mt-4">+ Thêm câu hỏi</button>
+            
+            <div class="mt-10 border-t pt-6">
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold text-lg hover:bg-blue-700">LƯU BỘ THẺ</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let questionCount = 0;
+
+        function addQuestion() {
+            const container = document.getElementById('questionsContainer');
+            const qId = questionCount++;
+            
+            const qHtml = `
+                <div class="question-block border p-4 mb-4 rounded bg-blue-50" data-id="${qId}">
+                    <input type="text" class="q-text w-full border p-2 mb-3" placeholder="Nhập câu hỏi...">
+                    <div class="answers-container space-y-2">
+                        <div class="flex items-center gap-2">
+                            <input type="radio" name="correct_${qId}" class="is-correct" checked>
+                            <input type="text" class="a-text border p-1 flex-1" placeholder="Đáp án 1">
+                        </div>
+                    </div>
+                    <button type="button" onclick="addAnswer(${qId})" class="text-sm text-blue-500 mt-2">+ Thêm đáp án</button>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', qHtml);
+        }
+
+        function addAnswer(qId) {
+            const qBlock = document.querySelector(`[data-id="${qId}"] .answers-container`);
+            const aHtml = `
+                <div class="flex items-center gap-2">
+                    <input type="radio" name="correct_${qId}" class="is-correct">
+                    <input type="text" class="a-text border p-1 flex-1" placeholder="Đáp án tiếp theo">
+                </div>
+            `;
+            qBlock.insertAdjacentHTML('beforeend', aHtml);
+        }
+
+        // Xử lý gửi dữ liệu (AJAX thay vì submit form truyền thống để gửi JSON phức tạp)
+        document.getElementById('flashcardForm').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                questions: []
+            };
+
+            document.querySelectorAll('.question-block').forEach(qBlock => {
+                const question = {
+                    question: qBlock.querySelector('.q-text').value,
+                    answers: []
+                };
+                qBlock.querySelectorAll('.answers-container > div').forEach(aDiv => {
+                    question.answers.push({
+                        answer: aDiv.querySelector('.a-text').value,
+                        isCorrect: aDiv.querySelector('.is-correct').checked
+                    });
+                });
+                data.questions.push(question);
+            });
+
+            const response = await fetch('/api/flashcards/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                alert('Tạo bộ thẻ thành công!');
+                window.location.href = '/flashcards';
+            }
+        };
+    </script>
+</body>
+</html>
