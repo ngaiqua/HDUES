@@ -29,6 +29,13 @@ public class SubjectService {
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
-    
-    // Other CRUD methods...
+
+    public SubjectDTO.SubjectResponse addSubject(SubjectDTO.SubjectRequest request) {
+        Subject subject = new Subject();
+        subject.setCode(request.getCode().trim());
+        subject.setName(request.getName().trim());
+        subject.setDescription(request.getDescription() != null ? request.getDescription().trim() : null);
+        Subject saved = subjectRepository.save(subject);
+        return convertToDto(saved);
+    }
 }
