@@ -45,7 +45,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         } else {
             AllowedEmail allowed = allowedEmailRepository.findByEmail(email).orElse(null);
             if (allowed == null) {
-                throw new OAuth2AuthenticationException(new org.springframework.security.oauth2.core.OAuth2Error("access_denied", "Email chưa được duyệt đăng nhập. Vui lòng liên hệ phòng đào tạo.", null));
+                throw new OAuth2AuthenticationException(new org.springframework.security.oauth2.core.OAuth2Error(
+                    "access_denied",
+                    "Email is not approved for login. Please contact the training department.",
+                    null
+                ));
             }
             role = allowed.getRole();
         }

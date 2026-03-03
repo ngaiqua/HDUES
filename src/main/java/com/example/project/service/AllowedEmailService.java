@@ -30,6 +30,10 @@ public class AllowedEmailService {
         return allowedEmailRepository.findAll();
     }
 
+    public Optional<AllowedEmail> findById(Long id) {
+        return allowedEmailRepository.findById(id);
+    }
+
     public Optional<AllowedEmail> findByEmail(String email) {
         return allowedEmailRepository.findByEmail(email);
     }
@@ -37,7 +41,7 @@ public class AllowedEmailService {
     @Transactional
     public AllowedEmail addEmail(String email, User.Role role, String approvedBy) {
         if (allowedEmailRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("Email đã tồn tại trong danh sách.");
+            throw new IllegalArgumentException("Email already exists in the allowed list.");
         }
         AllowedEmail a = new AllowedEmail();
         a.setEmail(email.trim().toLowerCase());
@@ -49,11 +53,47 @@ public class AllowedEmailService {
 
     @Transactional
     public void deleteById(Long id) {
+        if (id == null) {
+            return;
+        }
+        AllowedEmail existing = allowedEmailRepository.findById(id).orElse(null);
+        if (existing == null) {
+            return;
+        }
+        // Admin có thể xóa mọi email (kể cả admin/training)
+        allowedEmailRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteByIdForTraining(Long id) {
+        if (id == null) {
+            return;
+        }
+        AllowedEmail existing = allowedEmailRepository.findById(id).orElse(null);
+        if (existing == null) {
+            return;
+        }
+        // Không cho Training Department động vào mọi mail admin / training
+        if (ADMIN_EMAIL.equalsIgnoreCase(existing.getEmail())) {
+            throw new IllegalArgumentException("Training department cannot delete admin email.");
+        }
+        if (existing.getRole() == User.Role.ADMIN || existing.getRole() == User.Role.TRAINING_DEPARTMENT) {
+            throw new IllegalArgumentException("Training department can only manage STUDENT and LECTURER emails.");
+        }
         allowedEmailRepository.deleteById(id);
     }
 
     @Transactional
     public List<String> importFromExcel(MultipartFile file, String approvedBy) throws Exception {
+        return importFromExcelInternal(file, approvedBy, false);
+    }
+
+    @Transactional
+    public List<String> importFromExcelForTraining(MultipartFile file, String approvedBy) throws Exception {
+        return importFromExcelInternal(file, approvedBy, true);
+    }
+
+    private List<String> importFromExcelInternal(MultipartFile file, String approvedBy, boolean restrictToStudentAndLecturer) throws Exception {
         List<String> errors = new ArrayList<>();
         List<AllowedEmail> toSave = new ArrayList<>();
         try (InputStream is = file.getInputStream();
@@ -68,14 +108,18 @@ public class AllowedEmailService {
                 if (email == null || email.isBlank()) continue;
                 email = email.trim().toLowerCase();
                 if (ADMIN_EMAIL.equalsIgnoreCase(email)) {
-                    errors.add("Dòng " + (i + 1) + ": Không thể thêm email admin.");
+                    errors.add("Row " + (i + 1) + ": Cannot add admin email.");
                     continue;
                 }
                 if (allowedEmailRepository.existsByEmail(email)) {
-                    errors.add("Dòng " + (i + 1) + ": Email đã tồn tại: " + email);
+                    errors.add("Row " + (i + 1) + ": Email already exists: " + email);
                     continue;
                 }
                 User.Role role = parseRole(getCellString(roleCell));
+                if (restrictToStudentAndLecturer && role != User.Role.STUDENT && role != User.Role.LECTURER) {
+                    errors.add("Row " + (i + 1) + ": Only STUDENT or LECTURER roles are allowed for training department.");
+                    continue;
+                }
                 AllowedEmail a = new AllowedEmail();
                 a.setEmail(email);
                 a.setRole(role);
