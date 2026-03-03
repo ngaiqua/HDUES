@@ -33,11 +33,11 @@ public class DashboardController {
         public boolean isActive() { return active; }
     }
 
-    public static class DashboardUser {
+    public static class User {
         private final String name;
         private final String avatarUrl;
 
-        public DashboardUser(String name, String avatarUrl) {
+        public User(String name, String avatarUrl) {
             this.name = name;
             this.avatarUrl = avatarUrl;
         }
@@ -101,7 +101,7 @@ public class DashboardController {
         }
 
         model.addAttribute("pageTitle", pageTitle);
-        model.addAttribute("user", new DashboardUser(fullName, avatarUrl));
+        model.addAttribute("user", new User(fullName, avatarUrl));
         model.addAttribute("navItems", navItems);
         return "dashboard";
     }
