@@ -30,7 +30,7 @@ public class TrainingAllowedEmailController {
         model.addAttribute("listPath", "/training/allowed-emails");
         String name = user != null && user.getFullName() != null ? user.getFullName() : (user != null ? user.getEmail() : "Guest");
         String avatar = user != null && user.getPictureUrl() != null ? user.getPictureUrl() : "https://i.pravatar.cc/150?img=1";
-        model.addAttribute("user", new DashboardController.DashboardUser(name, avatar));
+        model.addAttribute("user", new DashboardController.User(name, avatar));
         model.addAttribute("navItems", List.of(
             new DashboardController.NavItem("/dashboard/training", "fa-building-columns", "Tổng quan", false),
             new DashboardController.NavItem("/training/allowed-emails", "fa-envelope-circle-check", "Duyệt email đăng nhập", true),
