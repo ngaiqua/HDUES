@@ -100,6 +100,22 @@
             </section>
             <section class="bg-white rounded-2xl shadow-[2px_2px_0px_#2B253C] border border-[#2B253C]/10 overflow-hidden">
                 <div class="px-5 py-3 border-b border-[#2B253C]/10 bg-[#FAF4F0]">
+                    <h2 class="text-base font-bold text-[#2B253C] uppercase tracking-wider">Objectives</h2>
+                </div>
+                <div class="p-5">
+                    <p class="text-base font-medium text-[#2B253C] leading-relaxed whitespace-pre-wrap" th:text="${syllabus.objectives != null && !syllabus.objectives.isEmpty() ? syllabus.objectives : '-'}">-</p>
+                </div>
+            </section>
+            <section class="bg-white rounded-2xl shadow-[2px_2px_0px_#2B253C] border border-[#2B253C]/10 overflow-hidden">
+                <div class="px-5 py-3 border-b border-[#2B253C]/10 bg-[#FAF4F0]">
+                    <h2 class="text-base font-bold text-[#2B253C] uppercase tracking-wider">Facilities</h2>
+                </div>
+                <div class="p-5">
+                    <p class="text-base font-medium text-[#2B253C] leading-relaxed whitespace-pre-wrap" th:text="${syllabus.facilities != null && !syllabus.facilities.isEmpty() ? syllabus.facilities : '-'}">-</p>
+                </div>
+            </section>
+            <section class="bg-white rounded-2xl shadow-[2px_2px_0px_#2B253C] border border-[#2B253C]/10 overflow-hidden">
+                <div class="px-5 py-3 border-b border-[#2B253C]/10 bg-[#FAF4F0]">
                     <h2 class="text-base font-bold text-[#2B253C] uppercase tracking-wider">Student Tasks</h2>
                 </div>
                 <div class="p-5">

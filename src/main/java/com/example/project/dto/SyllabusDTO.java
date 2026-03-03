@@ -19,6 +19,8 @@ public class SyllabusDTO {
         private String mainTextbook;       // Giáo trình chính
         private String referenceMaterials; // Tài liệu tham khảo
         private String studentTasks;       // Nhiệm vụ của sinh viên
+        private String objectives;         // Mục tiêu
+        private String facilities;         // Cơ sở vật chất
 
         public Long getSubjectId() { return subjectId; }
         public void setSubjectId(Long subjectId) { this.subjectId = subjectId; }
@@ -44,6 +46,10 @@ public class SyllabusDTO {
         public void setReferenceMaterials(String referenceMaterials) { this.referenceMaterials = referenceMaterials; }
         public String getStudentTasks() { return studentTasks; }
         public void setStudentTasks(String studentTasks) { this.studentTasks = studentTasks; }
+        public String getObjectives() { return objectives; }
+        public void setObjectives(String objectives) { this.objectives = objectives; }
+        public String getFacilities() { return facilities; }
+        public void setFacilities(String facilities) { this.facilities = facilities; }
     }
 
     public static class SyllabusResponse {
@@ -62,6 +68,8 @@ public class SyllabusDTO {
         private String mainTextbook;
         private String referenceMaterials;
         private String studentTasks;
+        private String objectives;
+        private String facilities;
 
         public Long getId() { return id; }
         public void setId(Long id) { this.id = id; }
@@ -93,5 +101,9 @@ public class SyllabusDTO {
         public void setReferenceMaterials(String referenceMaterials) { this.referenceMaterials = referenceMaterials; }
         public String getStudentTasks() { return studentTasks; }
         public void setStudentTasks(String studentTasks) { this.studentTasks = studentTasks; }
+        public String getObjectives() { return objectives; }
+        public void setObjectives(String objectives) { this.objectives = objectives; }
+        public String getFacilities() { return facilities; }
+        public void setFacilities(String facilities) { this.facilities = facilities; }
     }
 }

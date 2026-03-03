@@ -47,7 +47,8 @@ public class SyllabusController {
         return List.of(
                 new DashboardController.NavItem("/dashboard/student", "fa-house", "Home", false),
                 new DashboardController.NavItem("/my-courses", "fa-book-open-reader", "My Courses", false),
-                new DashboardController.NavItem("/syllabus", "fa-clipboard-list", "Syllabus", true)
+                new DashboardController.NavItem("/syllabus", "fa-clipboard-list", "Syllabus", true),
+                new DashboardController.NavItem("/curriculum", "fa-graduation-cap", "Curriculum", false)
         );
     }
 

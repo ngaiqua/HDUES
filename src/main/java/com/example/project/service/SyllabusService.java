@@ -39,6 +39,8 @@ public class SyllabusService {
         dto.setMainTextbook(syllabus.getMainTextbook());
         dto.setReferenceMaterials(syllabus.getReferenceMaterials());
         dto.setStudentTasks(syllabus.getStudentTasks());
+        dto.setObjectives(syllabus.getObjectives());
+        dto.setFacilities(syllabus.getFacilities());
         if (syllabus.getSubject() != null) {
             dto.setSubjectId(syllabus.getSubject().getId());
             dto.setSubjectCode(syllabus.getSubject().getCode());
@@ -113,6 +115,8 @@ public class SyllabusService {
         syllabus.setMainTextbook(request.getMainTextbook());
         syllabus.setReferenceMaterials(request.getReferenceMaterials());
         syllabus.setStudentTasks(request.getStudentTasks());
+        syllabus.setObjectives(request.getObjectives());
+        syllabus.setFacilities(request.getFacilities());
 
         Syllabus saved = syllabusRepository.save(syllabus);
         return convertToDto(saved);

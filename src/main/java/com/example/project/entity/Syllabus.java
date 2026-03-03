@@ -25,6 +25,10 @@ public class Syllabus {
     private String referenceMaterials; // Tài liệu tham khảo
     @Column(length = 2000)
     private String studentTasks;       // Nhiệm vụ của sinh viên
+    @Column(length = 2000)
+    private String objectives;         // Mục tiêu
+    @Column(length = 2000)
+    private String facilities;         // Cơ sở vật chất
 
     @ManyToOne
     @JoinColumn(name = "subject_id")
@@ -71,6 +75,10 @@ public class Syllabus {
     public void setReferenceMaterials(String referenceMaterials) { this.referenceMaterials = referenceMaterials; }
     public String getStudentTasks() { return studentTasks; }
     public void setStudentTasks(String studentTasks) { this.studentTasks = studentTasks; }
+    public String getObjectives() { return objectives; }
+    public void setObjectives(String objectives) { this.objectives = objectives; }
+    public String getFacilities() { return facilities; }
+    public void setFacilities(String facilities) { this.facilities = facilities; }
 
     public Subject getSubject() { return subject; }
     public void setSubject(Subject subject) { this.subject = subject; }
