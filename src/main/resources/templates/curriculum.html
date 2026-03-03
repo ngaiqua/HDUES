@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: layout(~{::main}, ${pageTitle}, ${user}, ${navItems})}">
+<head>
+    <title>Curriculum - HDUES</title>
+</head>
+<body>
+
+<main class="flex-1 overflow-auto bg-white p-4 md:p-6 flex flex-col h-full">
+    <div class="w-full max-w-3xl mx-auto flex flex-col items-center">
+        <h1 class="text-2xl md:text-3xl font-bold text-[#2B253C] mb-6">Curriculum</h1>
+
+        <div class="w-full bg-[#FAF4F0] border border-[#2B253C]/15 rounded-xl shadow-[3px_3px_0px_#2B253C] p-5 mb-6">
+            <p class="text-center text-[#2B253C] font-semibold text-sm mb-4">Search by curriculum</p>
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <div class="relative">
+                    <select id="searchType" class="w-full min-w-[110px] appearance-none bg-white border-2 border-[#2B253C]/25 rounded-xl pl-4 pr-9 py-2.5 text-sm font-medium text-[#2B253C] shadow-sm focus:outline-none focus:ring-2 focus:ring-[#E04F3E]/50 focus:border-[#E04F3E] hover:border-[#2B253C]/40 cursor-pointer transition-colors">
+                        <option value="code">Code</option>
+                        <option value="name">Name</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[#2B253C]/60 pointer-events-none text-xs"></i>
+                </div>
+                <input type="text" id="searchInput" placeholder="Enter curriculum code or name"
+                       class="border-2 border-[#2B253C]/25 rounded-xl px-4 py-2.5 text-sm font-medium text-[#2B253C] w-56 min-w-[140px] shadow-sm focus:outline-none focus:ring-2 focus:ring-[#E04F3E]/50 focus:border-[#E04F3E] hover:border-[#2B253C]/40 placeholder-[#8A8696] transition-colors">
+                <button type="button" id="btnSearch"
+                        class="bg-[#48BB78] hover:bg-[#38a169] text-white font-bold rounded-xl px-5 py-2.5 text-sm shadow-[2px_2px_0px_#2B253C] hover:shadow-[3px_3px_0px_#2B253C] hover:-translate-y-0.5 transition-all whitespace-nowrap">
+                    Search
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="resultsSection" class="hidden flex-1 flex flex-col min-h-0 mt-4" style="min-height: 200px;">
+        <p id="resultsCount" class="text-sm text-[#2B253C] font-medium mb-3">0 curriculum(s) found.</p>
+
+        <div class="flex-1 min-h-0 border border-[#2B253C] rounded-xl overflow-hidden flex flex-col shadow-[2px_2px_0px_#2B253C]">
+            <div id="tableWrapper" class="overflow-x-auto">
+                <table class="w-full text-sm" id="curriculumTable">
+                    <thead>
+                        <tr class="bg-[#E04F3E] text-white text-left">
+                            <th class="px-4 py-3 font-bold">ID</th>
+                            <th class="px-4 py-3 font-bold">Code</th>
+                            <th class="px-4 py-3 font-bold">Curriculum Name</th>
+                            <th class="px-4 py-3 font-bold">Training Level</th>
+                            <th class="px-4 py-3 font-bold">Program (VI)</th>
+                            <th class="px-4 py-3 font-bold">Program (EN)</th>
+                            <th class="px-4 py-3 font-bold">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="curriculumTableBody" class="bg-[#FAF4F0]">
+                    </tbody>
+                </table>
+            </div>
+            <div id="loading" class="hidden flex-1 flex items-center justify-center py-12 bg-[#FAF4F0]">
+                <i class="fa-solid fa-spinner fa-spin text-2xl text-[#E04F3E]"></i>
+            </div>
+            <div id="emptyState" class="hidden flex-1 flex items-center justify-center py-12 text-[#8A8696] font-semibold text-sm bg-[#FAF4F0]">
+                No curriculum found.
+            </div>
+        </div>
+    </div>
+
+    <span id="apiCurriculumUrl" th:attr="data-url=@{/api/curriculum}" style="display:none"></span>
+    <script>
+    (function() {
+        var apiSpan = document.getElementById('apiCurriculumUrl');
+        const API_CURRICULUM = (apiSpan && apiSpan.getAttribute('data-url')) || '/api/curriculum';
+
+        const searchType = document.getElementById('searchType');
+        const searchInput = document.getElementById('searchInput');
+        const btnSearch = document.getElementById('btnSearch');
+        const resultsCount = document.getElementById('resultsCount');
+        const tbody = document.getElementById('curriculumTableBody');
+        const loading = document.getElementById('loading');
+        const emptyState = document.getElementById('emptyState');
+        const tableWrapper = document.getElementById('tableWrapper');
+        const resultsSection = document.getElementById('resultsSection');
+
+        function showLoading(show) {
+            loading.classList.toggle('hidden', !show);
+            tableWrapper.classList.toggle('hidden', show);
+            emptyState.classList.add('hidden');
+        }
+
+        function showEmpty(show) {
+            emptyState.classList.toggle('hidden', !show);
+            tableWrapper.classList.toggle('hidden', show);
+            loading.classList.add('hidden');
+        }
+
+        function escapeHtml(s) {
+            const div = document.createElement('div');
+            div.textContent = s;
+            return div.innerHTML;
+        }
+
+        function renderTable(list) {
+            tbody.innerHTML = '';
+            if (!Array.isArray(list)) list = [];
+            if (list.length === 0) {
+                showEmpty(true);
+                resultsCount.textContent = '0 curriculum(s) found.';
+                return;
+            }
+            showEmpty(false);
+            resultsCount.textContent = list.length + ' curriculum(s) found.';
+            var q = (searchInput && searchInput.value) ? searchInput.value.trim() : '';
+            var typeVal = (searchType && searchType.value) ? searchType.value : 'code';
+            var parts = [];
+            if (q) parts.push('q=' + encodeURIComponent(q));
+            parts.push('type=' + encodeURIComponent(typeVal));
+            var query = '?' + parts.join('&');
+            list.forEach(function(item) {
+                const tr = document.createElement('tr');
+                tr.className = 'border-t border-[#2B253C]/20 hover:bg-white/70';
+                const detailsUrl = '/curriculum/details/' + (item.id != null ? item.id : '') + query;
+                tr.innerHTML =
+                    '<td class="px-4 py-3 text-[#2B253C]">' + (item.id != null ? item.id : '') + '</td>' +
+                    '<td class="px-4 py-3 font-semibold text-[#2B253C]">' + escapeHtml(item.curriculumCode || '') + '</td>' +
+                    '<td class="px-4 py-3 text-[#2B253C]">' + escapeHtml(item.curriculumName || '') + '</td>' +
+                    '<td class="px-4 py-3 text-[#2B253C]">' + escapeHtml(item.trainingLevel || '') + '</td>' +
+                    '<td class="px-4 py-3 text-[#2B253C] max-w-[200px] truncate" title="' + escapeHtml(item.programNameVi || '') + '">' + escapeHtml(item.programNameVi || '') + '</td>' +
+                    '<td class="px-4 py-3 text-[#2B253C] max-w-[200px] truncate" title="' + escapeHtml(item.programNameEn || '') + '">' + escapeHtml(item.programNameEn || '') + '</td>' +
+                    '<td class="px-4 py-3"><a href="' + detailsUrl + '" class="text-[#E04F3E] font-semibold hover:underline">View</a></td>';
+                tbody.appendChild(tr);
+            });
+        }
+
+        function doSearch() {
+            resultsSection.classList.remove('hidden');
+            const q = searchInput.value.trim();
+            const type = searchType.value || '';
+            showLoading(true);
+            var url = API_CURRICULUM;
+            if (q) {
+                url += '?q=' + encodeURIComponent(q);
+                if (type) url += '&type=' + encodeURIComponent(type);
+            }
+            fetch(url)
+                .then(function(r) {
+                    if (!r.ok) throw new Error('API ' + r.status);
+                    return r.json();
+                })
+                .then(function(data) {
+                    renderTable(Array.isArray(data) ? data : []);
+                })
+                .catch(function(err) {
+                    showLoading(false);
+                    showEmpty(true);
+                    resultsCount.textContent = '0 curriculum(s) found.';
+                    emptyState.textContent = 'Unable to load data. Check console or try again.';
+                });
+        }
+
+        if (btnSearch) btnSearch.addEventListener('click', doSearch);
+        if (searchInput) searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); doSearch(); }
+        });
+
+        function restoreSearchFromUrl() {
+            var params = new URLSearchParams(window.location.search);
+            var q = params.get('q');
+            var type = params.get('type');
+            if (q !== null && searchInput) searchInput.value = decodeURIComponent(q);
+            if (type !== null && searchType) searchType.value = type;
+            if (q !== null || type !== null) {
+                if (resultsSection) resultsSection.classList.remove('hidden');
+                doSearch();
+            }
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', restoreSearchFromUrl);
+        } else {
+            restoreSearchFromUrl();
+        }
+        window.addEventListener('pageshow', function(ev) { if (ev.persisted) restoreSearchFromUrl(); });
+    })();
+    </script>
+</main>
+
+</body>
+</html>

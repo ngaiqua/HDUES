@@ -73,9 +73,10 @@ public class DashboardController {
             case "student":
                 pageTitle = "Sinh viên";
                 navItems = List.of(
-                    new NavItem("/dashboard/student", "fa-house", "Trang chủ", true),
-                    new NavItem("/my-courses", "fa-book-open-reader", "Khóa học của tôi", false),
-                    new NavItem("/my-grades", "fa-graduation-cap", "Điểm", false)
+                    new NavItem("/dashboard/student", "fa-house", "Home", true),
+                    new NavItem("/my-courses", "fa-book-open-reader", "My Courses", false),
+                    new NavItem("/syllabus", "fa-clipboard-list", "Syllabus", false),
+                    new NavItem("/curriculum", "fa-graduation-cap", "Curriculum", false)
                 );
                 break;
             case "admin":

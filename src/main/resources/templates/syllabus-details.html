@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: layout(~{::main}, ${pageTitle}, ${user}, ${navItems})}">
+<head>
+    <title>Syllabus Details - HDUES</title>
+</head>
+<body>
+
+<main class="flex-1 overflow-auto bg-[#F8F9FA] p-4 md:p-6 flex flex-col h-full">
+    <div class="w-full">
+        <div class="relative flex items-center justify-center mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold text-[#2B253C] tracking-tight">Syllabus Details</h1>
+            <a th:href="${backToSyllabusUrl}" class="absolute right-0 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-base font-semibold text-[#E04F3E] bg-white border-2 border-[#E04F3E]/30 hover:bg-[#E04F3E]/5 hover:border-[#E04F3E] transition-colors shadow-sm">
+                <i class="fa-solid fa-arrow-left text-xs"></i> Back to search
+            </a>
+        </div>
+
+        <div th:if="${syllabus}" class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2fr] gap-4">
+            <!-- Overview card (thu nhỏ) -->
+            <section class="bg-white rounded-2xl shadow-[2px_2px_0px_#2B253C] border border-[#2B253C]/10 overflow-hidden flex flex-col min-w-0 max-w-[280px] lg:max-w-none">
+                <div class="px-3 py-2.5 border-b border-[#2B253C]/10 bg-[#FAF4F0]">
+                    <h2 class="text-sm font-bold text-[#2B253C] uppercase tracking-wider">Overview</h2>
+                </div>
+                <dl class="flex flex-col gap-2 p-3 flex-1">
+                    <div class="flex flex-col gap-0.5">
+                        <dt class="text-xs font-semibold text-[#8A8696] uppercase tracking-wide">Syllabus Name</dt>
+                        <dd class="text-sm font-semibold text-[#2B253C] leading-snug" th:text="${syllabus.subjectName}">-</dd>
+                    </div>
+                    <div class="flex flex-col gap-0.5">
+                        <dt class="text-xs font-semibold text-[#8A8696] uppercase tracking-wide">Subject Code</dt>
+                        <dd class="text-sm font-semibold text-[#2B253C]" th:text="${syllabus.subjectCode}">-</dd>
+                    </div>
+                    <div class="flex flex-col gap-0.5">
+                        <dt class="text-xs font-semibold text-[#8A8696] uppercase tracking-wide">Credits</dt>
+                        <dd class="text-sm font-semibold text-[#2B253C]" th:text="${syllabus.credits != null ? syllabus.credits : '-'}">-</dd>
+                    </div>
+                    <div class="flex flex-col gap-0.5">
+                        <dt class="text-xs font-semibold text-[#8A8696] uppercase tracking-wide">Course Type</dt>
+                        <dd class="text-sm font-semibold text-[#2B253C]" th:text="${syllabus.courseType != null && !syllabus.courseType.isEmpty() ? syllabus.courseType : '-'}">-</dd>
+                    </div>
+                    <div class="flex flex-col gap-0.5">
+                        <dt class="text-xs font-semibold text-[#8A8696] uppercase tracking-wide">Teaching Language</dt>
+                        <dd class="text-sm font-semibold text-[#2B253C]" th:text="${syllabus.teachingLanguage != null && !syllabus.teachingLanguage.isEmpty() ? syllabus.teachingLanguage : '-'}">-</dd>
+                    </div>
+                    <div class="flex flex-col gap-0.5">
+                        <dt class="text-xs font-semibold text-[#8A8696] uppercase tracking-wide">Pre-Requisite</dt>
+                        <dd class="text-sm font-semibold text-[#2B253C] leading-relaxed" th:text="${syllabus.prerequisite != null && !syllabus.prerequisite.isEmpty() ? syllabus.prerequisite : 'None'}">-</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <!-- Time Allocation card (thu nhỏ) -->
+            <section class="bg-white rounded-2xl shadow-[2px_2px_0px_#2B253C] border border-[#2B253C]/10 overflow-hidden flex flex-col min-w-0 max-w-[200px] lg:max-w-none">
+                <div class="px-3 py-2.5 border-b border-[#2B253C]/10 bg-[#FAF4F0]">
+                    <h2 class="text-sm font-bold text-[#2B253C] uppercase tracking-wider">Time Allocation</h2>
+                </div>
+                <div class="p-3 flex flex-col gap-3 flex-1 min-h-0">
+                    <div class="flex-1 min-h-[56px] flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-xl bg-[#E04F3E]/5 border border-[#E04F3E]/20">
+                        <span class="text-xl font-bold text-[#E04F3E] leading-none" th:text="${syllabus.theoryPeriods != null ? syllabus.theoryPeriods : 0}">0</span>
+                        <span class="text-xs font-semibold text-[#8A8696] uppercase tracking-wide">Theory</span>
+                    </div>
+                    <div class="flex-1 min-h-[56px] flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-xl bg-[#48BB78]/10 border border-[#48BB78]/20">
+                        <span class="text-xl font-bold text-[#38a169] leading-none" th:text="${syllabus.practicePeriods != null ? syllabus.practicePeriods : 0}">0</span>
+                        <span class="text-xs font-semibold text-[#8A8696] uppercase tracking-wide">Practice</span>
+                    </div>
+                    <div class="flex-1 min-h-[56px] flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-xl bg-[#2B253C]/5 border border-[#2B253C]/15">
+                        <span class="text-xl font-bold text-[#2B253C] leading-none" th:text="${syllabus.selfStudyPeriods != null ? syllabus.selfStudyPeriods : 0}">0</span>
+                        <span class="text-xs font-semibold text-[#8A8696] uppercase tracking-wide">Self-study</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Summary card (rộng hơn) -->
+            <section class="bg-white rounded-2xl shadow-[2px_2px_0px_#2B253C] border border-[#2B253C]/10 overflow-hidden flex flex-col min-w-0">
+                <div class="px-5 py-3 border-b border-[#2B253C]/10 bg-[#FAF4F0]">
+                    <h2 class="text-base font-bold text-[#2B253C] uppercase tracking-wider">Summary</h2>
+                </div>
+                <div class="p-5 flex-1 min-h-[140px]">
+                    <p class="text-base font-medium text-[#2B253C] leading-relaxed whitespace-pre-wrap" th:text="${syllabus.summary != null && !syllabus.summary.isEmpty() ? syllabus.summary : '-'}">-</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Tài liệu học tập (Main Textbook + Reference Materials), Student tasks -->
+        <div th:if="${syllabus}" class="mt-5 space-y-4">
+            <section class="bg-white rounded-2xl shadow-[2px_2px_0px_#2B253C] border border-[#2B253C]/10 overflow-hidden">
+                <div class="px-5 py-3 border-b border-[#2B253C]/10 bg-[#FAF4F0]">
+                    <h2 class="text-base font-bold text-[#2B253C] uppercase tracking-wider">Learning Materials</h2>
+                </div>
+                <div class="p-5 space-y-5">
+                    <div>
+                        <h3 class="text-sm font-bold text-[#8A8696] uppercase tracking-wide mb-2">Main Textbook</h3>
+                        <p class="text-base font-medium text-[#2B253C] leading-relaxed whitespace-pre-wrap" th:text="${syllabus.mainTextbook != null && !syllabus.mainTextbook.isEmpty() ? syllabus.mainTextbook : '-'}">-</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-[#8A8696] uppercase tracking-wide mb-2">Reference Materials</h3>
+                        <p class="text-base font-medium text-[#2B253C] leading-relaxed whitespace-pre-wrap" th:text="${syllabus.referenceMaterials != null && !syllabus.referenceMaterials.isEmpty() ? syllabus.referenceMaterials : '-'}">-</p>
+                    </div>
+                </div>
+            </section>
+            <section class="bg-white rounded-2xl shadow-[2px_2px_0px_#2B253C] border border-[#2B253C]/10 overflow-hidden">
+                <div class="px-5 py-3 border-b border-[#2B253C]/10 bg-[#FAF4F0]">
+                    <h2 class="text-base font-bold text-[#2B253C] uppercase tracking-wider">Objectives</h2>
+                </div>
+                <div class="p-5">
+                    <p class="text-base font-medium text-[#2B253C] leading-relaxed whitespace-pre-wrap" th:text="${syllabus.objectives != null && !syllabus.objectives.isEmpty() ? syllabus.objectives : '-'}">-</p>
+                </div>
+            </section>
+            <section class="bg-white rounded-2xl shadow-[2px_2px_0px_#2B253C] border border-[#2B253C]/10 overflow-hidden">
+                <div class="px-5 py-3 border-b border-[#2B253C]/10 bg-[#FAF4F0]">
+                    <h2 class="text-base font-bold text-[#2B253C] uppercase tracking-wider">Facilities</h2>
+                </div>
+                <div class="p-5">
+                    <p class="text-base font-medium text-[#2B253C] leading-relaxed whitespace-pre-wrap" th:text="${syllabus.facilities != null && !syllabus.facilities.isEmpty() ? syllabus.facilities : '-'}">-</p>
+                </div>
+            </section>
+            <section class="bg-white rounded-2xl shadow-[2px_2px_0px_#2B253C] border border-[#2B253C]/10 overflow-hidden">
+                <div class="px-5 py-3 border-b border-[#2B253C]/10 bg-[#FAF4F0]">
+                    <h2 class="text-base font-bold text-[#2B253C] uppercase tracking-wider">Student Tasks</h2>
+                </div>
+                <div class="p-5">
+                    <p class="text-base font-medium text-[#2B253C] leading-relaxed whitespace-pre-wrap" th:text="${syllabus.studentTasks != null && !syllabus.studentTasks.isEmpty() ? syllabus.studentTasks : '-'}">-</p>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>
