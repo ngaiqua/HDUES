@@ -32,9 +32,7 @@ public class DashboardController {
         public String getLabel() { return label; }
         public boolean isActive() { return active; }
     }
-    public static class User {
-        private final String name;
-        private final String avatarUrl;
+   
 
     public static class User {
         private final String name;
