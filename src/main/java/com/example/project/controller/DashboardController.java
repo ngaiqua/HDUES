@@ -63,15 +63,15 @@ public class DashboardController {
         switch (normalizedRole) {
             case "teacher":
             case "lecturer":
-                pageTitle = "Giảng viên";
+                pageTitle = "Lecturer";
                 navItems = List.of(
-                    new NavItem("/dashboard/lecturer", "fa-house", "Trang chủ", true),
-                    new NavItem("/courses", "fa-book", "Khóa học", false),
-                    new NavItem("/analytics", "fa-display", "Thống kê", false)
+                    new NavItem("/dashboard/lecturer", "fa-house", "Home", true),
+                    new NavItem("/courses", "fa-book", "Courses", false),
+                    new NavItem("/analytics", "fa-display", "Analytics", false)
                 );
                 break;
             case "student":
-                pageTitle = "Sinh viên";
+                pageTitle = "Student";
                 navItems = List.of(
                     new NavItem("/dashboard/student", "fa-house", "Home", true),
                     new NavItem("/my-courses", "fa-book-open-reader", "My Courses", false),
@@ -80,19 +80,19 @@ public class DashboardController {
                 );
                 break;
             case "admin":
-                pageTitle = "Quản trị hệ thống";
+                pageTitle = "System Administration";
                 navItems = List.of(
-                    new NavItem("/dashboard/admin", "fa-shield-halved", "Tổng quan", true),
-                    new NavItem("/admin/allowed-emails", "fa-envelope-circle-check", "Duyệt email đăng nhập", false),
-                    new NavItem("/admin/users", "fa-users", "Quản lý người dùng", false)
+                    new NavItem("/dashboard/admin", "fa-shield-halved", "Overview", true),
+                    new NavItem("/admin/allowed-emails", "fa-envelope-circle-check", "Approve login emails", false),
+                    new NavItem("/admin/users", "fa-users", "User management", false)
                 );
                 break;
             case "training":
-                pageTitle = "Phòng đào tạo";
+                pageTitle = "Training Department";
                 navItems = List.of(
-                    new NavItem("/dashboard/training", "fa-building-columns", "Tổng quan", true),
-                    new NavItem("/training/allowed-emails", "fa-envelope-circle-check", "Duyệt email đăng nhập", false),
-                    new NavItem("/training/classes", "fa-chalkboard-user", "Quản lý lớp", false)
+                    new NavItem("/dashboard/training", "fa-building-columns", "Overview", true),
+                    new NavItem("/training/allowed-emails", "fa-envelope-circle-check", "Approve login emails", false),
+                    new NavItem("/training/classes", "fa-chalkboard-user", "Class management", false)
                 );
                 break;
             default:

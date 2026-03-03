@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/main-layout :: layout(~{::main}, ${pageTitle}, ${user}, ${navItems})}">
 <head>
-    <title>Duyệt email đăng nhập</title>
+    <title>Approve login emails</title>
 </head>
 <body>
 <main class="flex-1 overflow-auto bg-white p-4 md:p-6">
@@ -19,12 +19,12 @@
                 <input type="text" name="email" placeholder="Email" required
                        class="border border-[#2B253C] rounded-lg px-3 py-2 w-56"/>
                 <select name="role" class="border border-[#2B253C] rounded-lg px-3 py-2">
-                    <option value="STUDENT">Sinh viên</option>
-                    <option value="LECTURER">Giảng viên</option>
-                    <option value="TRAINING_DEPARTMENT">Phòng đào tạo</option>
-                    <option value="ADMIN">Admin</option>
+                    <option value="STUDENT">Student</option>
+                    <option value="LECTURER">Lecturer</option>
+                    <option th:if="${basePath == 'admin'}" value="TRAINING_DEPARTMENT">Training Department</option>
+                    <option th:if="${basePath == 'admin'}" value="ADMIN">Admin</option>
                 </select>
-                <button type="submit" class="bg-[#2563eb] text-white px-4 py-2 rounded-lg hover:opacity-90">Thêm email</button>
+                <button type="submit" class="bg-[#2563eb] text-white px-4 py-2 rounded-lg hover:opacity-90">Add email</button>
             </form>
             <form th:action="@{${listPath + '/import'}}" method="post" enctype="multipart/form-data" class="flex items-end gap-2">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -33,28 +33,47 @@
             </form>
         </div>
 
-        <p class="text-sm text-gray-600 mb-2">File Excel: cột 1 = email, cột 2 = role (STUDENT, LECTURER, TRAINING_DEPARTMENT, ADMIN). Dòng đầu là header.</p>
+        <p class="text-sm text-gray-600 mb-2">
+            Excel file: column 1 = email, column 2 = role
+            (<span th:if="${basePath == 'admin'}">STUDENT, LECTURER, TRAINING_DEPARTMENT, ADMIN</span>
+            <span th:if="${basePath != 'admin'}">STUDENT, LECTURER</span>).
+            First row is header.
+        </p>
 
         <div class="border border-[#2B253C] rounded-2xl shadow-[4px_4px_0px_#2B253C] overflow-hidden">
             <table class="w-full text-left">
                 <thead class="bg-[#FAF4F0] border-b-2 border-[#2B253C]">
                 <tr>
                     <th class="px-4 py-3 font-bold text-[#2B253C]">Email</th>
-                    <th class="px-4 py-3 font-bold text-[#2B253C]">Vai trò</th>
-                    <th class="px-4 py-3 font-bold text-[#2B253C]">Ngày duyệt</th>
-                    <th class="px-4 py-3 font-bold text-[#2B253C]">Thao tác</th>
+                    <th class="px-4 py-3 font-bold text-[#2B253C]">Role</th>
+                    <th class="px-4 py-3 font-bold text-[#2B253C]">Approved at</th>
+                    <th class="px-4 py-3 font-bold text-[#2B253C]">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="a : ${allowedEmails}" class="border-b border-gray-200 hover:bg-gray-50">
+                <tr th:each="a : ${allowedEmails}"
+                    th:if="${basePath == 'admin' or (a.role.name() != 'ADMIN' and a.role.name() != 'TRAINING_DEPARTMENT')}"
+                    class="border-b border-gray-200 hover:bg-gray-50">
                     <td class="px-4 py-3" th:text="${a.email}"></td>
                     <td class="px-4 py-3" th:text="${a.role.name()}"></td>
-                    <td class="px-4 py-3" th:text="${a.approvedAt != null ? #temporals.format(a.approvedAt, 'dd/MM/yyyy HH:mm') : '-'}"></td>
+                    <td class="px-4 py-3"
+                        th:text="${a.approvedAt != null ? #temporals.format(a.approvedAt, 'dd/MM/yyyy HH:mm') : '-'}"></td>
                     <td class="px-4 py-3">
-                        <form th:action="@{${listPath + '/delete/' + a.id}}" method="post" class="inline">
+                        <form th:if="${(basePath == 'admin' or basePath == 'training') and (currentUserEmail == null or !#strings.equalsIgnoreCase(a.email, currentUserEmail))}"
+                              th:action="@{${listPath + '/delete/' + a.id}}"
+                              method="post"
+                              class="inline">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                            <button type="submit" class="text-red-600 hover:underline text-sm" onclick="return confirm('Xóa email này khỏi danh sách?');">Xóa</button>
+                            <button type="submit"
+                                    class="text-red-600 hover:underline text-sm"
+                                    onclick="return confirm('Remove this email from the list?');">
+                                Delete
+                            </button>
                         </form>
+                        <span th:if="${currentUserEmail != null and #strings.equalsIgnoreCase(a.email, currentUserEmail)}"
+                              class="text-gray-400 text-sm cursor-not-allowed">
+                            No actions
+                        </span>
                     </td>
                 </tr>
                 </tbody>
